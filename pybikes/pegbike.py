@@ -2,6 +2,7 @@
 # Copyright (C) 2019, mmmaia <mauricio.maia@gmail.com>
 # Distributed under the LGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import json
 
 from pybikes import BikeShareSystem, BikeShareStation

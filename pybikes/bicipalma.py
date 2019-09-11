@@ -2,6 +2,7 @@
 # Copyright (C) 2010-2012, eskerda <eskerda@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import re
 import json
 

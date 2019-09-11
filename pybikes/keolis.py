@@ -2,6 +2,7 @@
 # Copyright (C) 2010-2012, eskerda <eskerda@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import re
 import json
 
@@ -10,6 +11,7 @@ import lxml.html
 
 from .base import BikeShareSystem, BikeShareStation
 from . import utils
+from six.moves import map
 
 
 xml_parser = etree.XMLParser(recover = True)
@@ -23,11 +25,11 @@ class Keolis(BikeShareSystem):
         'company': ['Keolis']
     }
 
-    _re_fuzzle = '\"latitude\"\:\ \"{0}\"\,\ '\
-                 '\"longitude\"\:\ \"{0}\"\,\ '\
-                 '\"text\"\:\ \"(.*?)\"\,\ '\
+    _re_fuzzle = '\"latitude\": \"{0}\", '\
+                 '\"longitude\": \"{0}\", '\
+                 '\"text\": \"(.*?)\", '\
                  '\"markername'.format(_re_float)
-    _re_num_name = "\#(\d+)\ \-\ (.*)" # #10 - Place Lyautey
+    _re_num_name = r"#(\d+) - (.*)" # #10 - Place Lyautey
 
     def __init__(self, tag, meta, feed_url):
         super(Keolis, self).__init__(tag, meta)
@@ -38,7 +40,7 @@ class Keolis(BikeShareSystem):
             scraper = utils.PyBikesScraper()
         raw_fuzzle = scraper.request(self.feed_url)
         data = re.findall(Keolis._re_fuzzle, raw_fuzzle)
-        self.stations = map(KeolisStation, data)
+        self.stations = list(map(KeolisStation, data))
 
 class KeolisStation(BikeShareStation):
     def __init__(self, data):
@@ -186,14 +188,14 @@ class KeolisSTAR(BikeShareSystem):
     def update(self, scraper=None):
         scraper = scraper or utils.PyBikesScraper()
         data = json.loads(scraper.request(self.feed_url))
-        records = map(lambda r: r['fields'], data['records'])
-        self.stations = map(KeolisSTARStation, records)
+        records = [r['fields'] for r in data['records']]
+        self.stations = list(map(KeolisSTARStation, records))
 
 
 class KeolisSTARStation(BikeShareStation):
     def __init__(self, fields):
         name = fields['nom']
-        latitude, longitude = map(float, fields['coordonnees'])
+        latitude, longitude = list(map(float, fields['coordonnees']))
         bikes = int(fields['nombrevelosdisponibles'])
         free = int(fields['nombreemplacementsdisponibles'])
         extra = {
@@ -228,7 +230,7 @@ class VCub(BikeShareSystem):
             if pred['sid'] in station_dict:
                 station_dict[pred['sid']]['status'] = pred['status']
 
-        self.stations = map(VCubStation, station_dict.values())
+        self.stations = list(map(VCubStation, list(station_dict.values())))
 
 
 class VCubStation(BikeShareStation):

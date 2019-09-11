@@ -2,11 +2,13 @@
 # Copyright (C) 2010-2012, eskerda <eskerda@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import json
-from urlparse import urljoin
+from six.moves.urllib.parse import urljoin
 
 from pybikes import BikeShareSystem, BikeShareStation, exceptions
 from pybikes.utils import PyBikesScraper
+import six
 
 
 class Gbfs(BikeShareSystem):
@@ -38,7 +40,7 @@ class Gbfs(BikeShareSystem):
 
         # Prefer "en", if not, take any
         lang = "en"
-        feeds = feed_data['data'].get(lang, feed_data['data'].values().pop())
+        feeds = feed_data['data'].get(lang, list(feed_data['data'].values()).pop())
 
         for feed in feeds['feeds']:
             if force_https:
@@ -98,7 +100,7 @@ class GbfsStation(BikeShareStation):
         if not info['is_installed']:
             raise exceptions.StationPlannedException()
 
-        self.name = unicode(info['name'])
+        self.name = six.text_type(info['name'])
         self.bikes = int(info['num_bikes_available'])
         self.free = int(info['num_docks_available'])
         self.latitude = float(info['lat'])

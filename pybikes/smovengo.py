@@ -3,6 +3,7 @@
 # Copyright (C) 2015, Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import json
 
 from .base import BikeShareSystem, BikeShareStation

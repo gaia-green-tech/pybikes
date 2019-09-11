@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 import json
 
 from pybikes import BikeShareSystem, BikeShareStation, PyBikesScraper

@@ -2,18 +2,21 @@
 # Copyright (C) 2010-2012, eskerda <eskerda@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import re
 
 from .base import BikeShareSystem, BikeShareStation
 from . import utils
+from six.moves import map
+from six.moves import zip
 
 __all__ = ['Baksi', 'BaksiStation']
 
-ID_NAME_RGX = "([0-9]+)\-([\w\s.()-]+)\'"
-STATUS_RGX = "Durum\ [&nbsp;]+\ (\w+)"
+ID_NAME_RGX = r"([0-9]+)-([\w\s.()-]+)\'"
+STATUS_RGX = r"Durum [&nbsp;]+ (\w+)"
 DOCKS_RGX = "Park[&nbsp;]+([0-9]+)"
 BIKES_RGX = "Bisiklet[&nbsp;]+([0-9]+)"
-LAT_LNG_RGX = "([\s0-9.]+)\',\ \'([\s0-9.]+)"
+LAT_LNG_RGX = r"([\s0-9.]+)\', \'([\s0-9.]+)"
 
 class Baksi(BikeShareSystem):
 
@@ -40,14 +43,14 @@ class Baksi(BikeShareSystem):
         geopoints = re.findall(LAT_LNG_RGX, html_data, re.UNICODE)
 
         # Refine Output
-        station_id, name = zip(*id_name)
+        station_id, name = list(zip(*id_name))
         status = ["Active" if out == "Aktif" else "Inactive" for out in status]
         docks = [int(i) for i in docks]
         bikes = [int(i) for i in bikes]
-        latitude, longitude = zip(*geopoints)
+        latitude, longitude = list(zip(*geopoints))
 
-        self.stations = map(BaksiStation, zip(station_id, name, status, docks,
-            bikes, latitude, longitude))
+        self.stations = list(map(BaksiStation, list(zip(station_id, name, status, docks,
+            bikes, latitude, longitude))))
 
 
 class BaksiStation(BikeShareStation):

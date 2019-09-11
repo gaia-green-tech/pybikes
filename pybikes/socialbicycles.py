@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
 import json
 
 from pybikes import BikeShareStation, BikeShareSystem
 from pybikes.utils import PyBikesScraper
+from six.moves import map
 
 BASE_URL = 'https://app.socialbicycles.com/api/networks/{uid}/hubs?page={page}&per_page='
 
@@ -42,7 +44,7 @@ class SocialBicycles(BikeShareSystem):
 
             places.extend(data['items'])
 
-        self.stations = map(SocialBicyclesStation, places)
+        self.stations = list(map(SocialBicyclesStation, places))
 
 
 class SocialBicyclesStation(BikeShareStation):

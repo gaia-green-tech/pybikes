@@ -2,13 +2,15 @@
 # Copyright (C) 2010-2012, eskerda <eskerda@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import re
-from itertools import imap
+
 
 import requests
 from shapely.geometry import Polygon, Point, box
 
 from pybikes.base import BikeShareStation
+from six.moves import map
 
 
 def str2bool(v):
@@ -27,7 +29,7 @@ def sp_capwords(word):
         u'ses', u'sa', u'ses'
     ]
     word = word.lower()
-    cap_lambda = lambda (i, w): w.capitalize() if i == 0 or w not in blacklist else w
+    cap_lambda = lambda i_w: i_w[1].capitalize() if i_w[0] == 0 or i_w[1] not in blacklist else i_w[1]
     return " ".join(map(cap_lambda, enumerate(word.split())))
 
 
@@ -113,6 +115,9 @@ class PyBikesScraper(object):
 
     def disableProxy(self):
         self.proxy_enabled = False
+    
+    def close(self):
+        self.session.close()
 
 
 def filter_bounds(things, key, *point_bounds):
@@ -136,6 +141,6 @@ def filter_bounds(things, key, *point_bounds):
 
     for thing in things:
         point = Point(*key(thing))
-        if not any(imap(lambda pol: pol.contains(point), bounds)):
+        if not any(map(lambda pol: pol.contains(point), bounds)):
             continue
         yield thing

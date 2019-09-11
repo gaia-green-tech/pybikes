@@ -4,11 +4,13 @@
 # Copyright (C) 2015, Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import re
 import json
 
 from .base import BikeShareSystem, BikeShareStation
 from . import utils
+from six.moves import map
 
 
 # Each station is formatted as:
@@ -71,7 +73,7 @@ class SmooveAPI(Smoove):
             # inoperative stations have 'coordinates': '', skip them
             if s['coordinates'] == '':
                 continue
-            lat, lng = map(float, s['coordinates'].split(','))
+            lat, lng = list(map(float, s['coordinates'].split(',')))
             name = s['name']
             bikes = int(s['avl_bikes'])
             free = int(s['free_slots'])

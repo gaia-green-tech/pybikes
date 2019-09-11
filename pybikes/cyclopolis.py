@@ -2,10 +2,12 @@
 # Copyright (C) 2015, Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import re
 
 from .base import BikeShareSystem, BikeShareStation
 from . import utils, exceptions
+from six.moves import zip
 
 __all__ = ['Cyclopolis', 'CyclopolisStation']
 
@@ -53,10 +55,10 @@ class Cyclopolis(BikeShareSystem):
         stations = []
 
         html = scraper.request(self.feed_url)
-        data = zip(
+        data = list(zip(
             re.findall(LAT_LNG_RGX, html, re.DOTALL),
             re.findall(DATA_RGX, html, re.DOTALL)
-        )
+        ))
         for lat_lng, info in data:
             latitude = float(lat_lng[0])
             longitude = float(lat_lng[1])

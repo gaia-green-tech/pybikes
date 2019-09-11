@@ -2,9 +2,10 @@
 # Copyright (C) 2010-2012, eskerda <eskerda@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import re
 import json
-import HTMLParser
+import six.moves.html_parser
 
 from lxml import etree
 
@@ -21,7 +22,7 @@ endpoints = {
     'station'  : 'stations/{station_id}?contract={contract}&apiKey={api_key}'
 }
 
-html_parser = HTMLParser.HTMLParser()
+html_parser = six.moves.html_parser.HTMLParser()
 
 class Cyclocity(BikeShareSystem):
 

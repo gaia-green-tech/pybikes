@@ -2,6 +2,7 @@
 # Copyright (C) 2010-2012, eskerda <eskerda@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import re
 import json
 from lxml import etree
@@ -9,6 +10,7 @@ from lxml import etree
 from .base import BikeShareSystem, BikeShareStation
 from pybikes.utils import PyBikesScraper, filter_bounds
 from pybikes.contrib import TSTCache
+from six.moves import map
 
 __all__ = ['Nextbike', 'NextbikeStation']
 
@@ -55,9 +57,9 @@ class Nextbike(BikeShareSystem):
                 return (float(lat), float(lng))
             places = filter_bounds(places, getter, self.bbox)
         # For now ignore bikes roaming around
-        places = filter(lambda p: p.attrib.get('bike', '') != '1', places)
+        places = [p for p in places if p.attrib.get('bike', '') != '1']
 
-        self.stations = map(NextbikeStation, places)
+        self.stations = list(map(NextbikeStation, places))
 
 
 class NextbikeStation(BikeShareStation):

@@ -2,6 +2,7 @@
 # Copyright (C) Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import re
 import json
 
@@ -9,7 +10,7 @@ from .base import BikeShareSystem, BikeShareStation
 from . import utils
 
 FEED_URL = "https://www.bikeshare.ie/"
-STATIONS_RGX = "var\ mapsfromcache\ =\ (.*?);"
+STATIONS_RGX = "var mapsfromcache = (.*?);"
 
 
 class BikeshareIE(BikeShareSystem):

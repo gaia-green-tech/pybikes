@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
 import re
 import json
 import zlib
 from pkg_resources import resource_string
-from itertools import imap
+
 
 from lxml import etree
 
 from pybikes.base import BikeShareSystem, BikeShareStation
 from pybikes.utils import PyBikesScraper, filter_bounds
 from pybikes.contrib import TSTCache
+import six
+from six.moves import map
 
 
 _kml_ns = {
@@ -44,7 +47,7 @@ class YouBike(BikeShareSystem):
         # we have.
         self.city_bounds = []
         for bound in city_bounds:
-            coords = filter(None, bound.text.split('\n'))
+            coords = [_f for _f in bound.text.split('\n') if _f]
             # We got the kml with lng / lat
             coords = map(lambda c: reversed(c.split(',')), coords)
             coords = map(lambda ll: map(float, ll), coords)
@@ -56,7 +59,7 @@ class YouBike(BikeShareSystem):
         data_m = re.search(r'siteContent=\'({.+?})\';', html)
         data = json.loads(data_m.group(1))
         filtered_data = filter_bounds(
-            data.itervalues(),
+            six.itervalues(data),
             lambda s: (float(s['lat']), float(s['lng'])),
             * self.city_bounds
         )

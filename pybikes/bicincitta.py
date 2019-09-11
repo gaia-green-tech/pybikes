@@ -2,9 +2,10 @@
 # Copyright (C) 2019, eskerda <eskerda@gmail.com>
 # Distributed under the LGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import json
 
-from urlparse import urljoin
+from six.moves.urllib.parse import urljoin
 
 from pybikes import BikeShareSystem, BikeShareStation, PyBikesScraper
 

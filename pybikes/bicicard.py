@@ -55,6 +55,7 @@ use this system, but if the community does it, that's ok (assumedly, this
 information one day will be public / maybe we can ask them to make a dump).
 """
 
+from __future__ import absolute_import
 import re
 from pkg_resources import resource_string
 
@@ -62,6 +63,7 @@ from lxml import etree, html
 
 from pybikes.base import BikeShareSystem, BikeShareStation
 from pybikes.utils import PyBikesScraper
+from six.moves import map
 
 __all__ = ['Bicicard']
 
@@ -72,7 +74,7 @@ _kml_ns = {
 _xpath_q = "//td[@class='titulo']/text()[contains(.,'%s')]/ancestor::table[1]"\
            "//td[@class='lat2']/text()[contains(.,'ESTADO')]"
 
-_re_bikes_slots = ".*\((?P<bikes>\d+)\/(?P<slots>\d+)\)" #  ESTADO - (1/10)
+_re_bikes_slots = r".*((?P<bikes>\d+)/(?P<slots>\d+))" #  ESTADO - (1/10)
                                                          #            ↑  ↑
 class Bicicard(BikeShareSystem):
     sync = True
@@ -102,11 +104,11 @@ class Bicicard(BikeShareSystem):
             name = placemark.findtext('kml:name', namespaces = _kml_ns)
             name_id = placemark.findtext('kml:description',
                                       namespaces = _kml_ns)
-            coor = map(
+            coor = list(map(
                 float, placemark.findtext('.//kml:coordinates',
                                           namespaces = _kml_ns).
                        split(',')[0:2]
-            )
+            ))
 
             # Find a status table with the name_id of this station, XPath
             # performance on this query is not really costly so far.

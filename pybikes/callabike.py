@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2015, David Kreitschmann <david@kreitschmann.de>
 # Distributed under the AGPL license, see LICENSE.txt
+from __future__ import absolute_import
 import re
 import json
 

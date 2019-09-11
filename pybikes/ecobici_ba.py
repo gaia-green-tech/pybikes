@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from urlparse import urljoin
+from __future__ import absolute_import
+from six.moves.urllib.parse import urljoin
 
 from pybikes.gbfs import Gbfs
 from pybikes.utils import PyBikesScraper

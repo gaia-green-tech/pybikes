@@ -2,10 +2,12 @@
 # Copyright (C) 2010-2012, eskerda <eskerda@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 from lxml import etree
 
 from pybikes.base import BikeShareSystem, BikeShareStation
 from pybikes.utils import PyBikesScraper
+from six.moves import map
 
 __all__ = ['GewistaCityBike']
 
@@ -29,7 +31,7 @@ class GewistaCityBike(BikeShareSystem):
         data = scraper.request(self.endpoint)
         tree = etree.fromstring(data.encode('utf-8'))
         markers = tree.xpath('//station')
-        self.stations = map(GewistaStation, markers)
+        self.stations = list(map(GewistaStation, markers))
 
 
 class GewistaStation(BikeShareStation):

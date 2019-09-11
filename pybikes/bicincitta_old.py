@@ -5,10 +5,12 @@
 # XXX: The idea is to kill this as soon as possible. There's only one old feed
 # (brescia) using it.
 
+from __future__ import absolute_import
 import re
 
 from .base import BikeShareSystem, BikeShareStation
 from . import utils
+from six.moves import zip
 
 
 class BicincittaOld(BikeShareSystem):
@@ -38,7 +40,7 @@ class BicincittaOld(BikeShareSystem):
         data = scraper.request(url)
         raw = re.findall(BicincittaOld._RE_INFO, data)
         info = raw[0].split('\',\'')
-        info = map(lambda chunk: chunk.split('|'), info)
+        info = [chunk.split('|') for chunk in info]
         # Yes, this is a joke
         names = info[5]
         descs = info[7]

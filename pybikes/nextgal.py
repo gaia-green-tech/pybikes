@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from urlparse import urljoin
+from __future__ import absolute_import
+from six.moves.urllib.parse import urljoin
 
 from lxml import etree
 
 from pybikes.base import BikeShareSystem, BikeShareStation
 from pybikes.utils import PyBikesScraper
+from six.moves import map
 
 PATH = '/swm/WSMobile.asmx'
 
@@ -45,7 +47,7 @@ class Nextgal(BikeShareSystem):
         tree = etree.XML(data.encode('utf-8'))
         stations_xml = tree.xpath('//ab:EstacionAdditionalInformationDto',
                                   namespaces=NS)
-        self.stations = map(NextgalStation, stations_xml)
+        self.stations = list(map(NextgalStation, stations_xml))
 
 
 class NextgalStation(BikeShareStation):

@@ -2,17 +2,19 @@
 # Copyright (C) 2010-2012, eskerda <eskerda@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import re
 
 from lxml import html
 from .base import BikeShareSystem, BikeShareStation
 from .exceptions import InvalidStation
 from . import utils
+from six.moves import zip
 
 __all__ = ['BCycleSystem', 'BCycleStation']
 
-LAT_LNG_RGX = "var\ point\ =\ new\ google.maps.LatLng\(([+-]?\\d*\\.\\d+)(?![-+0-9\\.])\,\ ([+-]?\\d*\\.\\d+)(?![-+0-9\\.])\)"
-DATA_RGX = "var\ marker\ =\ new\ createMarker\(point\,(.*?)\,\ icon\,\ back"
+LAT_LNG_RGX = "var point = new google.maps.LatLng(([+-]?\\d*\\.\\d+)(?![-+0-9\\.]), ([+-]?\\d*\\.\\d+)(?![-+0-9\\.]))"
+DATA_RGX = "var marker = new createMarker(point,(.*?), icon, back"
 USERAGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/31.0.1650.63 Chrome/31.0.1650.63 Safari/537.36"
 
 class BCyclePurgatoryException(Exception):

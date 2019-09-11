@@ -2,6 +2,7 @@
 # Copyright (C) 2018, eskerda <eskerda@gmail.com>
 # Distributed under the LGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import json
 
 from pybikes import BikeShareSystem, BikeShareStation, PyBikesScraper

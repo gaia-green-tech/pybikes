@@ -1,0 +1,17 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+six = "*"
+requests = ">=2.20.0"
+lxml = "*"
+cssselect = ">=0.9"
+shapely = ">=1.5.13"
+demjson = "*"
+
+[requires]
+python_version = "3.7"

@@ -3,6 +3,7 @@
 # Modified work Copyright (C) 2015 Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 # Distributed under the LGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 from .base import BikeShareSystem, BikeShareStation
 from . import utils
 
@@ -33,7 +34,7 @@ class BaseSystem(BikeShareSystem):
 
 class Samba(BaseSystem):
     sync = True
-    _STATIONS_RGX = 'exibirEstacaMapa\((.*?)\);'
+    _STATIONS_RGX = 'exibirEstacaMapa((.*?));'
 
     def __init__(self, tag, meta, url):
         super(Samba, self).__init__(tag, meta)
@@ -75,7 +76,7 @@ class Samba(BaseSystem):
 
 class SambaNew(BaseSystem):
     sync = True
-    _STATIONS_RGX = "var\ beaches\ =\ \[(.*?)\,\];"
+    _STATIONS_RGX = "var beaches = [(.*?),];"
 
     def __init__(self, tag, meta, url):
         super(SambaNew, self).__init__(tag, meta)

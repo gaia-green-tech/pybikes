@@ -2,6 +2,7 @@
 # Copyright (C) 2010-2012, eskerda <eskerda@gmail.com>
 # Distributed under the LGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import re
 
 from lxml import etree
@@ -14,7 +15,7 @@ __all__ = ['Domoblue']
 MAIN = 'http://clientes.domoblue.es/onroll/'
 TOKEN_URL = 'generaMapa.php?cliente={service}&ancho=500&alto=700'
 XML_URL = 'generaXml.php?token={token}&cliente={service}'
-TOKEN_RE = 'generaXml\.php\?token\=(.*?)\&cliente'
+TOKEN_RE = 'generaXml.php?token=(.*?)&cliente'
 USER_AGENT = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.19 (KHTML, '\
              'like Gecko) Chrome/18.0.1025.168 Safari/535.19'
 STATUS_CODES = {

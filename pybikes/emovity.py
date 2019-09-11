@@ -2,12 +2,14 @@
 # Copyright (C) 2010-2012, eskerda <eskerda@gmail.com>
 # Distributed under the LGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import re
 
 from lxml import html
 
 from .base import BikeShareSystem, BikeShareStation
 from . import utils
+from six.moves import zip
 
 __all__ = ['Emovity']
 
@@ -28,10 +30,10 @@ class Emovity(BikeShareSystem):
             scraper = utils.PyBikesScraper()
 
         fuzzle = scraper.request(self.feed_url)
-        data = zip(
+        data = list(zip(
             re.findall(r"addMarker\(\d+,(\d+.\d+),(\d+.\d+)", fuzzle),
             re.findall(r"html\[\d+\]='(.*?)';", fuzzle)
-        )
+        ))
         stations = []
         for latlng, html_fuzzle in data:
             dom = html.fromstring(html_fuzzle)

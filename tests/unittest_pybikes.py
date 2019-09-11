@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2010-2012, eskerda <eskerda@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
+from __future__ import absolute_import
+from __future__ import print_function
 import re
 import unittest
 import sys
 
 import pybikes
+import six
+from six import unichr
+from six.moves import range
 try:
     import keys
 except ImportError:
@@ -21,7 +26,7 @@ except ImportError:
 class TestSystems(unittest.TestCase):
     def _test_systems(self, schema):
         key = getattr(keys, schema, None)
-        print('\nTesting %s' % schema)
+        print(('\nTesting %s' % schema))
         print('=============================')
         for cname, instance in pybikes.get_instances(schema):
             self._test_system(instance['tag'], key)
@@ -32,7 +37,7 @@ class TestSystems(unittest.TestCase):
             - Tests okayness of 5 stations on the system
         """
         p_sys = pybikes.get(tag, key)
-        print(u'Testing {!r}, {!r}'.format(p_sys.meta['name'], p_sys.meta.get('city')))
+        print((u'Testing {!r}, {!r}'.format(p_sys.meta['name'], p_sys.meta.get('city'))))
         self._test_update(p_sys)
         station_string = ""
         if len(p_sys.stations) < 5:
@@ -56,7 +61,9 @@ class TestSystems(unittest.TestCase):
             - Station has its base parameters
         """
         if not instance.sync:
-            station.update()
+            scraper = pybikes.utils.PyBikesScraper()
+            station.update(scraper)
+            scraper.close()
             self._test_allows_parameter(station)
         else:
             self._test_dumb_allows_parameter(station)
@@ -79,10 +86,12 @@ class TestSystems(unittest.TestCase):
             means being updateable. Also, test if its update function
             allows a PyBikesScraper parameter
         """
-        instance.update()
-        print("%s has %d stations" % (
+        scraper = pybikes.utils.PyBikesScraper()
+        instance.update(scraper)
+        scraper.close()
+        print(("%s has %d stations" % (
             instance.meta['name'], len(instance.stations)
-        ))
+        )))
         self.assertTrue(len(instance.stations) > 0)
         self._test_allows_parameter(instance)
 
@@ -92,6 +101,7 @@ class TestSystems(unittest.TestCase):
         """
         scraper = pybikes.utils.PyBikesScraper()
         instance.update(scraper)
+        scraper.close()
         self.assertIsNotNone(scraper.last_request)
 
     def _test_dumb_allows_parameter(self, instance):
@@ -105,6 +115,7 @@ class TestSystems(unittest.TestCase):
         try:
             scraper = pybikes.utils.PyBikesScraper()
             instance.update(scraper)
+            scraper.close()
         except Exception:
             raised = True
         self.assertFalse(raised,
@@ -265,7 +276,7 @@ class TestDataFiles(unittest.TestCase):
         msg = 'File: %r' % schema
         self.assertIn('tag', _instance, msg=msg)
         self.assertIn('meta', _instance, msg=msg)
-        self.assertRegexpMatches(
+        self.assertRegex(
             _instance['tag'],
             r'^[a-z0-9\-]+$',
             msg="Instance tag should only contain lowercase alphanumeric "
@@ -285,7 +296,7 @@ class TestDataFiles(unittest.TestCase):
                                   msg=('Error in %r on ' % field) + msg)
         for field in ['city', 'country', 'name']:
             self.assertIn(field, meta, msg=('Missing %r on ' % field) + msg)
-            self.assertIsInstance(meta[field], basestring,
+            self.assertIsInstance(meta[field], six.string_types,
                                   msg=('Error in %r on ' % field) + msg)
 
         self.assertTrue(-90 <= meta['latitude'] <= 90,
@@ -385,7 +396,7 @@ def create_test_system_method(schema, tag):
         self._test_system(tag, key)
     return test_system
 
-schemas = map(lambda name: re.sub(r'\.json$', '', name), pybikes.get_all_data())
+schemas = [re.sub(r'\.json$', '', name) for name in pybikes.get_all_data()]
 for schema in schemas:
     test_schema = create_test_schema_method(schema)
     test_schema.__name__ = 'test_%s' % schema

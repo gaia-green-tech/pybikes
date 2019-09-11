@@ -2,6 +2,9 @@
 # Copyright (C) 2010-2012, eskerda <eskerda@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
+import six
+from six.moves import map
 __author__ = "eskerda (eskerda@gmail.com)"
 __version__ = "2.0"
 __copyright__ = "Copyright (c) 2010-2012 eskerda"
@@ -9,7 +12,7 @@ __license__ = "AGPL"
 
 import re
 import json
-from itertools import imap
+
 from pkg_resources import resource_string, resource_listdir
 
 from pybikes.exceptions import BikeShareSystemNotFound
@@ -42,7 +45,7 @@ def _uniclass_extractor(data):
 
 
 def _multiclass_extractor(data):
-    for k, v in data['class'].iteritems():
+    for k, v in six.iteritems(data['class']):
         for i in data['class'][k]['instances']:
             yield (k, i)
 
@@ -54,7 +57,7 @@ def get_instances(schema=None):
         schemas = [schema]
     for schema in schemas:
         data = get_data(schema)
-        if isinstance(data['class'], basestring):
+        if isinstance(data['class'], six.string_types):
             extractor = _uniclass_extractor
         elif isinstance(data['class'], dict):
             extractor = _multiclass_extractor
@@ -84,7 +87,7 @@ def get_instance(schema, tag):
 
 
 def find_system(tag):
-    datas = imap(get_data, get_all_data())
+    datas = map(get_data, get_all_data())
     for data in datas:
         schema = data['system']
         try:

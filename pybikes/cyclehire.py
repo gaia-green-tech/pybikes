@@ -2,6 +2,7 @@
 # Copyright (C) 2016, Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import re
 import demjson
 from lxml import html

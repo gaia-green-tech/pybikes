@@ -2,6 +2,7 @@
 # Copyright (C) 2015, Eduardo Mucelli Rezende Oliveira <edumucelli@gmail.com>
 # Distributed under the AGPL license, see LICENSE.txt
 
+from __future__ import absolute_import
 import json
 
 from .base import BikeShareSystem, BikeShareStation
@@ -53,7 +54,7 @@ class EnciclaStation(BikeShareStation):
             "capacity": 15,
             "bikes": 8,
             "places": null,
-            "picture": "http:\/\/encicla.gov.co\/wp-content\/uploads\/estaciones-360-moravia.jpg",
+            "picture": "http://encicla.gov.co/wp-content/uploads/estaciones-360-moravia.jpg",
             "bikes_state": 0,
             "places_state": "danger",
             "closed": 0,
